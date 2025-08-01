@@ -26,7 +26,7 @@ Kiwi와 MeCab-ko 형태소 분석기를 사용해 Unigram SentencePiece 토크�
 
 
  * Extrinsic 평가 (한국어 ASR 최적화)
- * 
+   
 CER: Character Error Rate. 한국어 ASR에 가장 중요한 지표입니다. (낮을수록 좋음)
 
 WER: Word Error Rate. 참고용 지표입니다. (낮을수록 좋음)
