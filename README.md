@@ -1,2 +1,110 @@
-# Tokenizer_Evaluation_Framework
-This repository provides a comprehensive framework for evaluating and comparing KIWI and Mecab tokenizers in korean used in NLP. 
+# 한국어 ASR 토크나이저 평가 시스템
+
+한국어 자동 음성 인식(ASR) 모델에 최적화된 토크나이저를 평가하고 비교하기 위한 종합 프레임워크입니다.
+Kiwi와 MeCab-ko 형태소 분석기를 사용해 Unigram SentencePiece 토크나이저를 학습하고, 내재적/외재적 평가를 통해 최적의 토크나이저를 선정합니다.
+
+---
+
+## 🎯 프로젝트 목표
+
+* 한국어 ASR에 최적화된 토크나이저 발굴
+* 형태소 분석 기반 전처리 비교 (Kiwi vs MeCab-ko)
+* 서브워드 토크나이징 효율성과 ASR 정확도 분석
+* 실시간 처리 성능(latency)도 함께 평가
+
+---
+
+## ✨ 주요 기능
+
+* Kiwi와 MeCab-ko 형태소 분석 지원
+* SentencePiece Unigram 토크나이저 학습
+* 내재적 평가 (어휘 커버리지, 토큰 길이, Fertility 등)
+* 외재적 평가 (CER, WER, 처리 지연, 처리량)
+* 자동 보고서(Markdown, 시각화) 생성
+* 단계별 파이프라인 실행 및 사용자 설정 가능
+
+---
+
+## 📊 평가 지표 요약
+
+| 항목           | Kiwi 기반    | MeCab 기반   |
+| ------------ | ---------- | ---------- |
+| 총 단어 수       | 22,910,626 | 22,910,626 |
+| 총 토큰 수       | 43,574,108 | 43,379,724 |
+| <unk> 토큰 수   | 806,586    | 50,413     |
+| 어휘 커버리지      | 0.9815     | 0.9988     |
+| 단어 커버리지      | 0.9648     | 0.9978     |
+| Fertility    | 1.9019     | 1.8934     |
+| 평균 토큰 길이     | 2.01       | 2.02       |
+| 분할된 단어 비율    | 0.0416     | 0.0452     |
+| 고유 토큰 수      | 15,438     | 14,340     |
+| 고유 단어 수      | 262,025    | 262,025    |
+| CER          | 0.08       | 0.06       |
+| WER          | 0.12       | 0.10       |
+| Latency (ms) | 15.2       | 18.5       |
+
+---
+
+## 📈 결과 해석
+
+* **MeCab 기반** 토크나이저가 CER, WER, OOV율 등 ASR 정확도에서 우수
+* **Kiwi 기반** 토크나이저가 더 빠른 처리 속도 제공 (낮은 Latency)
+* MeCab은 더 세밀한 토크나이징(높은 Fertility)으로 정확도 향상
+* 실제 사용 환경에 따라 실시간 응답 속도 또는 정확도 중 우선순위 선택 필요
+
+---
+
+## 🚀 사용법
+
+1. 의존성 설치
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. `config.yaml`에서 데이터 경로 및 파라미터 설정
+
+3. 전체 파이프라인 실행
+
+   ```bash
+   python run_eval.py --full
+   ```
+
+4. 개별 단계 실행 옵션
+
+   * 형태소 분석만:
+
+     ```bash
+     python main.py --skip-training --skip-evaluation
+     ```
+   * 토크나이저 학습만:
+
+     ```bash
+     python main.py --skip-morph --skip-evaluation
+     ```
+   * 평가만:
+
+     ```bash
+     python main.py --skip-morph --skip-training
+     ```
+
+---
+
+## 📁 프로젝트 구조
+
+```
+toyproject/
+├── config.yaml
+├── requirements.txt
+├── main.py
+├── morphological_analyzer.py
+├── tokenizer_trainer.py
+├── evaluator.py
+├── data/
+│   ├── train_text.txt
+│   ├── validation_text.txt
+│   ├── train_text_morph_kiwi.txt
+│   └── train_text_morph_mecab.txt
+└── outputs/
+    ├── tokenizers/
+    └── evaluation/
