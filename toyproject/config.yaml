@@ -1,0 +1,40 @@
+# 한국어 ASR 토크나이저 평가 설정
+data:
+  train_file: "/home/aileen419/train_data_korean_callcenter_speech/train_text.txt"
+  validation_file: "/home/aileen419/train_data_korean_callcenter_speech/train_text.txt"  # 검증용으로도 같은 파일 사용
+  output_dir: "outputs"
+  
+tokenizer:
+  vocab_size: 16000
+  character_coverage: 0.9995
+  shuffle_input_sentence: true
+  hard_vocab_limit: false
+  model_type: "unigram"
+  
+morphological_analysis:
+  kiwi:
+    enabled: true
+    output_file: "data/train_text_morph_kiwi.txt"
+  mecab:
+    enabled: true
+    output_file: "data/train_text_morph_mecab.txt"
+    
+evaluation:
+  intrinsic:
+    enabled: true
+    metrics: ["fertility", "oov_rate", "vocab_coverage", "avg_tokens_per_word"]
+  extrinsic:
+    enabled: true
+    nemo_config: "configs/asr_config.yaml"
+    metrics: ["cer", "wer", "latency", "throughput"]  # CER을 주요 지표로 설정
+    primary_metric: "cer"  # 한국어 ASR에 가장 적합한 지표
+    
+training:
+  batch_size: 32
+  learning_rate: 0.001
+  epochs: 10
+  device: "cuda"  # or "cpu"
+  
+logging:
+  wandb_project: "korean-asr-tokenizer-evaluation"
+  log_level: "INFO" 
